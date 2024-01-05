@@ -12,5 +12,5 @@
   "template": "serverless.template",
   "template-parameters": "",
   "s3-bucket" : "vinay-demo4",
-  "stack-name" : "lambdatest-stack1234567"
+  "stack-name" : "lambdatest-stack12345678"
 }
