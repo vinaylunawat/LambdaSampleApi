@@ -1,33 +1,35 @@
-name: CI
+name: .NET
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ./AWSServerless3
+
 jobs:
-  deploy:
+  build:
+
     runs-on: ubuntu-latest
-
+    env: 
+      working-directory: ./AWSServerless3
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x  # Adjust version as needed
-      - name: Build
-        run: |
-            dotnet restore
-            dotnet build --no-restore --configuration Release
-      - name: Publish
-        run: |
-            dotnet publish -c Release -o publish
-      - name: AWS CLI
-        run: dotnet tool install -g Amazon.Lambda.Tools
-      - name: Deploy to AWS Lambda
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-2
-      - run: zip -r publish.zip ./AWSServerless3/*
-      - run: aws lambda update-function-code --function-name=sam-app-AspNetCoreFunction-WCwiwnDGkUhJ  --zip-file=fileb://publish.zip 
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: AWS CLI
+      run: dotnet tool install -g Amazon.Lambda.Tools
+    - name: Restore dependencies
+      run: dotnet restore AWSServerless3.csproj
+    - name: Build
+      run: dotnet build --no-restore AWSServerless3.csproj
+    - name: Deploy to Lambda
+      working-directory: ./AWSServerless3
+      run: dotnet lambda deploy-serverless
