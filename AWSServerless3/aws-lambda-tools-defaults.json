@@ -11,6 +11,6 @@
   "s3-prefix": "AWSServerless3/",
   "template": "serverless.template",
   "template-parameters": "",
-  "s3-bucket" : "vinay-demo3",
-  "stack-name" : "lambdatest-stack12345"
+  "s3-bucket" : "vinay-demo4",
+  "stack-name" : "lambdatest-stack1234567"
 }
