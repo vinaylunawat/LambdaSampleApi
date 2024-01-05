@@ -27,7 +27,7 @@ jobs:
     - name: AWS CLI
       run: dotnet tool install -g Amazon.Lambda.Tools
     - name: Restore dependencies
-      run: dotnet restore AWSServerless3/AWSServerless3.csproj
+      run: ls
     - name: Build
       run: dotnet build --no-restore ./AWSServerless3/AWSServerless3.csproj
     - name: Deploy to Lambda
